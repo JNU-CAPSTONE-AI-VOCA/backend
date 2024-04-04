@@ -17,9 +17,13 @@ class BackendApplicationTests {
 		this.properties = properties;
 	}
 
+	private static final String DEFAULT_KEY_NAME = "${OPEN_API_KEY}";
 	@Test
-	void contextLoads() {
-		Assertions.assertThat(properties.key()).isNotNull().isNotEqualTo("${OPEN_API_KEY}");
+	void given_whenContextLoads_thenPropertiesLoaded() {
+		//given
+		//when
+		//then
+		Assertions.assertThat(properties.key()).isNotNull().isNotEqualTo(DEFAULT_KEY_NAME);
 		Assertions.assertThat(properties.model()).isNotNull();
 	}
 

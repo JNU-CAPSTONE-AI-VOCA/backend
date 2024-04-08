@@ -1,6 +1,7 @@
 package kr.ac.jnu.vocai.backend.controller;
 
 import kr.ac.jnu.vocai.backend.file.FileUploadUtils;
+import kr.ac.jnu.vocai.backend.file.dto.VocabularyListDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * 파일 업로드 컨트롤러 클래스.
@@ -31,7 +33,7 @@ public class UploadController {
     }
 
     @PostMapping("/pdf/upload")
-    public ResponseEntity<String> saveFiles(@RequestParam("files") MultipartFile[] files) throws IOException {
+    public ResponseEntity<?> saveFiles(@RequestParam("files") MultipartFile[] files) throws IOException {
 
         if (files.length > 3) {
             return ResponseEntity.badRequest().body("cannot upload more than 3 files");
@@ -47,7 +49,22 @@ public class UploadController {
             // 파일 저장
             file.transferTo(new File(uploadDir + "/" + FileUploadUtils.fileNameConvert(file.getOriginalFilename())));
         }
-        return ResponseEntity.ok("upload success");
+
+        VocabularyListDTO.WordDTO wordDTO1 = new VocabularyListDTO.WordDTO("apple", "사과");
+        VocabularyListDTO.WordDTO wordDTO2 = new VocabularyListDTO.WordDTO("grape", "포도");
+        VocabularyListDTO.WordDTO wordDTO3 = new VocabularyListDTO.WordDTO("banana", "바나나");
+        VocabularyListDTO.WordDTO wordDTO4 = new VocabularyListDTO.WordDTO("melon", "멜론");
+        VocabularyListDTO.ExampleDTO exampleDTO1 = new VocabularyListDTO.ExampleDTO("apple and grape", List.of(wordDTO1, wordDTO2));
+        VocabularyListDTO.ExampleDTO exampleDTO2 = new VocabularyListDTO.ExampleDTO("banana and melon", List.of(wordDTO3, wordDTO4));
+
+        List<VocabularyListDTO.ExampleDTO> exampleDTOList = new java.util.ArrayList<>(List.of(exampleDTO1, exampleDTO2));
+
+        VocabularyListDTO vocabularyListDTO = new VocabularyListDTO(exampleDTOList);
+
+
+        return ResponseEntity.ok(vocabularyListDTO);
     }
+
+
 
 }

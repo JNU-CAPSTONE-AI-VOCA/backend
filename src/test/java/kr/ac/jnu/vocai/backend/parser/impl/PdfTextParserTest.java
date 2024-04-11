@@ -1,9 +1,7 @@
 package kr.ac.jnu.vocai.backend.parser.impl;
 
-import kr.ac.jnu.vocai.backend.parser.exception.PageIndexOutOfBoundsException;
-import org.apache.pdfbox.Loader;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.fdf.FDFDocument;
+import kr.ac.jnu.vocai.backend.file.parser.exception.PageIndexOutOfBoundsException;
+import kr.ac.jnu.vocai.backend.file.parser.impl.PdfTextParser;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

@@ -1,7 +1,6 @@
 package kr.ac.jnu.vocai.backend.common.utils;
 
 import kr.ac.jnu.vocai.backend.file.exception.InvalidFileExtensionException;
-import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
@@ -11,7 +10,6 @@ import java.util.UUID;
  * @since 1.0
  */
 
-@Component
 public class FileUploadUtils {
 
     public static boolean isImage(String fileName) {

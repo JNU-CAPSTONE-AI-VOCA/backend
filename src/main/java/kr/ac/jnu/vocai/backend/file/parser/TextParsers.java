@@ -1,7 +1,7 @@
-package kr.ac.jnu.vocai.backend.parser;
+package kr.ac.jnu.vocai.backend.file.parser;
 
-import kr.ac.jnu.vocai.backend.parser.exception.ParserNotFoundException;
-import kr.ac.jnu.vocai.backend.parser.impl.PdfTextParser;
+import kr.ac.jnu.vocai.backend.file.parser.exception.ParserNotFoundException;
+import kr.ac.jnu.vocai.backend.file.parser.impl.PdfTextParser;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

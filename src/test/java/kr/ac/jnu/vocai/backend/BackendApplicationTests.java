@@ -1,6 +1,6 @@
 package kr.ac.jnu.vocai.backend;
 
-import kr.ac.jnu.vocai.backend.config.OpenAIProperties;
+import kr.ac.jnu.vocai.backend.common.config.OpenAIProperties;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

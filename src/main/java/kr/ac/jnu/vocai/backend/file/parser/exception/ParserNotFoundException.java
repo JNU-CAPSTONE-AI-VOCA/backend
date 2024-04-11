@@ -1,4 +1,4 @@
-package kr.ac.jnu.vocai.backend.parser.exception;
+package kr.ac.jnu.vocai.backend.file.parser.exception;
 
 /**
  * Parser 를 찾을수 없을 때 발생하는 exception 클래스.

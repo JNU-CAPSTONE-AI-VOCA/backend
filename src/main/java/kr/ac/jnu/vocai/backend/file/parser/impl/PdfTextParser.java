@@ -1,8 +1,8 @@
-package kr.ac.jnu.vocai.backend.parser.impl;
+package kr.ac.jnu.vocai.backend.file.parser.impl;
 
-import kr.ac.jnu.vocai.backend.parser.TextParser;
+import kr.ac.jnu.vocai.backend.file.parser.TextParser;
+import kr.ac.jnu.vocai.backend.file.parser.exception.PageIndexOutOfBoundsException;
 
-import kr.ac.jnu.vocai.backend.parser.exception.PageIndexOutOfBoundsException;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.pdfbox.Loader;
@@ -13,8 +13,6 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**

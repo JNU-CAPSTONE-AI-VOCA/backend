@@ -1,8 +1,7 @@
-package kr.ac.jnu.vocai.backend.config;
+package kr.ac.jnu.vocai.backend.common.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.boot.web.client.RestTemplateCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -57,8 +56,8 @@ public class RestTemplateConfig {
     @Bean
     public ClientHttpRequestFactory customRequestFactory() {
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-        requestFactory.setConnectTimeout(Duration.ofMillis(3000));
-        requestFactory.setReadTimeout(Duration.ofMillis(3000));
+        requestFactory.setConnectTimeout(Duration.ofMillis(5000));
+        requestFactory.setReadTimeout(Duration.ofMillis(150000));
         return new BufferingClientHttpRequestFactory(requestFactory);
     }
 

@@ -1,5 +1,7 @@
 package kr.ac.jnu.vocai.backend.chat.dto.response;
 
+import kr.ac.jnu.vocai.backend.chat.dto.Message;
+
 import java.util.List;
 
 /**
@@ -9,5 +11,9 @@ import java.util.List;
  * @since 1.0
  */
 public record ChatResponse(String id, List<Choice> choices, Integer created, String model) {
-    private record Choice(String finishReason, String index, String message) {}
+    private record Choice(String finishReason, String index, Message message) {}
+
+    public String messageContent() {
+        return choices.get(0).message.content();
+    }
 }

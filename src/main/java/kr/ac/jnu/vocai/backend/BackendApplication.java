@@ -1,7 +1,5 @@
 package kr.ac.jnu.vocai.backend;
 
-import kr.ac.jnu.vocai.backend.config.OpenAIProperties;
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;

@@ -50,12 +50,8 @@ public class PdfTextParser implements TextParser {
             log.info("total Pages : {} ", pdfDocument.getNumberOfPages());
             return Arrays.stream(textStripper
                             .getText(pdfDocument)
-                            .replaceAll("\n+\r\t", "\n")
-                            .replaceAll("\n$", "")
-                            .replaceAll("[^\\s\\na-zA-Z]", "")
                             .split("\n"))
                     .filter(s -> !s.isBlank())
-                    .map(String::toLowerCase)
                     .collect(Collectors.joining("\n"));
         } catch (IOException e) {
             log.error("해당 파일로부터 pdf 를 로드할 수 없습니다. fileName = {}, cause = {}", file.getName(), e.getMessage());
@@ -81,9 +77,6 @@ public class PdfTextParser implements TextParser {
             splitter.setEndPage(page);
             return Arrays.stream(textStripper
                             .getText(splitter.split(pdfDocument).get(0))
-                            .replaceAll("\n+\r\t", "\n")
-                            .replaceAll("\n$", "")
-                            .replaceAll("[^\\s\\na-zA-Z]", "")
                             .split("\n"))
                     .filter(s -> !s.isBlank())
                     .map(String::toLowerCase)

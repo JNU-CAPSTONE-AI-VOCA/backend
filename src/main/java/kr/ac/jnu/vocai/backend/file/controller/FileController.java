@@ -16,13 +16,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Flux;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * 파일 컨트롤러 클래스.
  * @author wavewwave20
+ * @author daecheol song
  * @since 1.0
  */
 @Slf4j
@@ -33,13 +36,22 @@ public class FileController {
 
     private final ExtractService extractService;
 
-    @PostMapping(value = "/extract/words", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ExtractWordResponse> extractWords(@Validated FileExtractRequest extractRequest, BindingResult bindingResult) {
+    @PostMapping(value = "/extract/words", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<ExtractWordResponse>> extractWords(@Validated FileExtractRequest extractRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.error("bad request, cause = {}", bindingResult.getAllErrors());
             throw new RuntimeException(bindingResult.getAllErrors().toString());
         }
         return ResponseEntity.ok(extractService.extractWord(extractRequest));
+    }
+
+    @PostMapping(value = "/extract/words/stream", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<ExtractWordResponse> extractWordsStream(@Validated FileExtractRequest extractRequest, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            log.error("bad request, cause = {}", bindingResult.getAllErrors());
+            throw new RuntimeException(bindingResult.getAllErrors().toString());
+        }
+        return extractService.extractWordStream(extractRequest);
     }
 
 }

@@ -2,15 +2,18 @@ package kr.ac.jnu.vocai.backend.common.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.boot.web.client.RestTemplateCustomizer;
+import org.springframework.ai.autoconfigure.openai.OpenAiChatProperties;
+import org.springframework.ai.openai.api.ApiUtils;
+import org.springframework.ai.openai.api.OpenAiApi;
+import org.springframework.boot.autoconfigure.web.client.RestClientBuilderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.*;
 import org.springframework.util.StreamUtils;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -19,21 +22,26 @@ import java.time.Duration;
 import java.util.List;
 
 /**
- * OPEN AI API 를 사용하기 위한 RestTemplate 관련 설정.
+ * OpenAiApi 프로퍼티 설정.
  * @author daecheol song
  * @since 1.0
  */
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-public class RestTemplateConfig {
+public class OpenAiApiConfig {
 
-    private final OpenAIProperties openAIProperties;
+    private final OpenAiChatProperties openAiChatProperties;
+
+    @Bean
+    @Primary
+    public OpenAiApi openAiApi() {
+        return new OpenAiApi(ApiUtils.DEFAULT_BASE_URL, openAiChatProperties.getApiKey(), restClientBuilder());
+    }
 
     @Bean
     public ClientHttpRequestInterceptor customInterceptor() {
         return (request, body, execution) -> {
-            request.getHeaders().setBearerAuth(openAIProperties.key());
             request.getHeaders().setContentType(MediaType.APPLICATION_JSON);
             request.getHeaders().setAccept(List.of(MediaType.APPLICATION_JSON));
             logRequest(request, body);
@@ -43,14 +51,14 @@ public class RestTemplateConfig {
         };
     }
 
-    @Bean
-    public RestTemplateCustomizer restTemplateCustomizer() {
-        return restTemplate -> restTemplate.getInterceptors().add(customInterceptor());
-    }
 
     @Bean
-    public RestTemplateBuilder restTemplateBuilder() {
-        return new RestTemplateBuilder(restTemplateCustomizer());
+    public RestClient.Builder restClientBuilder() {
+        RestClientBuilderConfigurer configurer = new RestClientBuilderConfigurer();
+        RestClient.Builder builder = RestClient.builder()
+                .requestFactory(customRequestFactory())
+                .requestInterceptor(customInterceptor());
+        return configurer.configure(builder);
     }
 
     @Bean
@@ -62,17 +70,8 @@ public class RestTemplateConfig {
     }
 
 
-    @Bean
-    public RestTemplate restTemplate() {
-        return restTemplateBuilder()
-                .requestFactory(this::customRequestFactory)
-                .build();
-    }
-
-
-    private void logRequest(HttpRequest request, byte[] body){
-        if (log.isDebugEnabled())
-        {
+    private void logRequest(HttpRequest request, byte[] body) {
+        if (log.isDebugEnabled()) {
             log.debug("===========================request begin================================================");
             log.debug("URI         : {}", request.getURI());
             log.debug("Method      : {}", request.getMethod());
@@ -83,8 +82,7 @@ public class RestTemplateConfig {
     }
 
     private void logResponse(ClientHttpResponse response) throws IOException {
-        if (log.isDebugEnabled())
-        {
+        if (log.isDebugEnabled()) {
             log.debug("============================response begin==========================================");
             log.debug("Status code  : {}", response.getStatusCode());
             log.debug("Status text  : {}", response.getStatusText());

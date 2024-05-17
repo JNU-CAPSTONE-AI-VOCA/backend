@@ -1,4 +1,4 @@
-package kr.ac.jnu.vocai.backend.parser.exception;
+package kr.ac.jnu.vocai.backend.file.parser.exception;
 
 /**
  * Page 가 파일의 Page 범위를 벗어날때 발생하는 exception 클래스.

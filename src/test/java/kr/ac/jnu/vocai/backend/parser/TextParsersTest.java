@@ -1,7 +1,9 @@
 package kr.ac.jnu.vocai.backend.parser;
 
-import kr.ac.jnu.vocai.backend.parser.exception.ParserNotFoundException;
-import kr.ac.jnu.vocai.backend.parser.impl.PdfTextParser;
+import kr.ac.jnu.vocai.backend.file.parser.TextParser;
+import kr.ac.jnu.vocai.backend.file.parser.TextParsers;
+import kr.ac.jnu.vocai.backend.file.parser.exception.ParserNotFoundException;
+import kr.ac.jnu.vocai.backend.file.parser.impl.PdfTextParser;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.Test;
 

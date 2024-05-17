@@ -1,4 +1,4 @@
-package kr.ac.jnu.vocai.backend.config;
+package kr.ac.jnu.vocai.backend.common.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

@@ -21,15 +21,30 @@ configurations.configureEach {
 	exclude group: "commons-logging", module: "commons-logging"
 }
 
+ext {
+	set('springAiVersion', "0.8.1")
+}
+
 repositories {
 	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}"
+	}
 }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	// https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
-	implementation 'org.apache.pdfbox:pdfbox:3.0.2'
+	// chat gpt token 계산
+	implementation 'com.knuddels:jtokkit:1.0.0'
+	implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter'
+	implementation 'org.springframework.ai:spring-ai-pdf-document-reader'
 
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'

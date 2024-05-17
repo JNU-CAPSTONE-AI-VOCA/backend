@@ -1,6 +1,6 @@
-package kr.ac.jnu.vocai.backend.parser;
+package kr.ac.jnu.vocai.backend.file.parser;
 
-import kr.ac.jnu.vocai.backend.parser.exception.PageIndexOutOfBoundsException;
+import kr.ac.jnu.vocai.backend.file.parser.exception.PageIndexOutOfBoundsException;
 
 import java.io.File;
 

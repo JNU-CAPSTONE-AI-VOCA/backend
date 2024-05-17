@@ -1,20 +1,23 @@
-package kr.ac.jnu.vocai.backend.parser.impl;
+package kr.ac.jnu.vocai.backend.file.parser.impl;
 
-import kr.ac.jnu.vocai.backend.parser.TextParser;
+import kr.ac.jnu.vocai.backend.file.parser.TextParser;
+import kr.ac.jnu.vocai.backend.file.parser.exception.PageIndexOutOfBoundsException;
 
-import kr.ac.jnu.vocai.backend.parser.exception.PageIndexOutOfBoundsException;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.multipdf.Splitter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.springframework.ai.document.Document;
+import org.springframework.ai.reader.ExtractedTextFormatter;
+import org.springframework.ai.reader.pdf.PagePdfDocumentReader;
+import org.springframework.ai.reader.pdf.config.PdfDocumentReaderConfig;
+import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -44,25 +47,22 @@ public class PdfTextParser implements TextParser {
      */
     @Override
     public String parse(File file) {
-        try (PDDocument pdfDocument = Loader.loadPDF(file)) {
-            PDFTextStripper textStripper = new PDFTextStripper();
-            textStripper.setAddMoreFormatting(true);
-            textStripper.setLineSeparator("\n");
-            textStripper.setWordSeparator(" ");
-            log.info("total Pages : {} ", pdfDocument.getNumberOfPages());
-            return Arrays.stream(textStripper
-                            .getText(pdfDocument)
-                            .replaceAll("\n+\r\t", "\n")
-                            .replaceAll("\n$", "")
-                            .replaceAll("[^\\s\\na-zA-Z]", "")
-                            .split("\n"))
-                    .filter(s -> !s.isBlank())
-                    .map(String::toLowerCase)
-                    .collect(Collectors.joining("\n"));
-        } catch (IOException e) {
-            log.error("해당 파일로부터 pdf 를 로드할 수 없습니다. fileName = {}, cause = {}", file.getName(), e.getMessage());
-        }
-        return EMPTY_STRING;
+        ExtractedTextFormatter extractedTextFormatter = ExtractedTextFormatter.builder()
+                .withLeftAlignment(true)
+                .withNumberOfBottomTextLinesToDelete(1)
+                .build();
+        PdfDocumentReaderConfig config = PdfDocumentReaderConfig
+                .builder()
+                .withPageExtractedTextFormatter(extractedTextFormatter)
+                .build();
+
+
+        PagePdfDocumentReader pdfReader = new PagePdfDocumentReader(ResourceUtils.FILE_URL_PREFIX + file.getAbsolutePath(), config);
+
+        return pdfReader.get()
+                .stream()
+                .map(Document::getContent)
+                .collect(Collectors.joining("\n"));
     }
 
     /**
@@ -83,9 +83,6 @@ public class PdfTextParser implements TextParser {
             splitter.setEndPage(page);
             return Arrays.stream(textStripper
                             .getText(splitter.split(pdfDocument).get(0))
-                            .replaceAll("\n+\r\t", "\n")
-                            .replaceAll("\n$", "")
-                            .replaceAll("[^\\s\\na-zA-Z]", "")
                             .split("\n"))
                     .filter(s -> !s.isBlank())
                     .map(String::toLowerCase)

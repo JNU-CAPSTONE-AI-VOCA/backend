@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 
 /**
@@ -110,10 +111,19 @@ public class ExtractServiceImpl implements ExtractService {
 
     }
 
+    private boolean isValidFileName(String fileName) {
+        return Objects.nonNull(fileName) && fileName.length() >= 4;
+    }
 
     private File transferDataAndSaveFile(MultipartFile multipartFile) {
+        String originalFileName = multipartFile.getOriginalFilename();
+        if (!isValidFileName(originalFileName)) {
+            throw new RuntimeException("fileName is invalid, fileName = " + originalFileName);
+        }
+        String fileExtension = originalFileName.substring(originalFileName.length() - 4);
+
         try {
-            File file = new File(fileProperties.uploadDir() + multipartFile.getOriginalFilename());
+            File file = new File(fileProperties.uploadDir() + UUID.randomUUID() + fileExtension);
             multipartFile.transferTo(file);
             return file;
         } catch (IOException e) {

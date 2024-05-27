@@ -90,9 +90,11 @@ class PdfTextParserTest {
         String notExistsFilePath = "xxxxxxxxxxxxxx";
         given(notExistFile.toPath()).willReturn(Path.of(notExistsFilePath));
         //when
-        String actual = parser.parse(notExistFile);
+        ThrowableAssert.ThrowingCallable execute = () -> parser.parse(notExistFile);
         //then
-        assertThat(actual).isEmpty();
+        assertThatThrownBy(execute)
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("java.io.FileNotFoundException: null (지정된 파일을 찾을 수 없습니다)");
     }
 
     @Test

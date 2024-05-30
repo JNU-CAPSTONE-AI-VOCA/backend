@@ -112,7 +112,7 @@ public class ExtractServiceImpl implements ExtractService {
     }
 
     private boolean isValidFileName(String fileName) {
-        return Objects.nonNull(fileName) && fileName.length() >= 4;
+        return Objects.nonNull(fileName) && fileName.matches(".+\\..+");
     }
 
     private File transferDataAndSaveFile(MultipartFile multipartFile) {
@@ -120,7 +120,8 @@ public class ExtractServiceImpl implements ExtractService {
         if (!isValidFileName(originalFileName)) {
             throw new RuntimeException("fileName is invalid, fileName = " + originalFileName);
         }
-        String fileExtension = originalFileName.substring(originalFileName.length() - 4);
+        int extensionOffset = originalFileName.indexOf(".");
+        String fileExtension = originalFileName.substring(extensionOffset);
 
         try {
             File file = new File(fileProperties.uploadDir() + UUID.randomUUID() + fileExtension);

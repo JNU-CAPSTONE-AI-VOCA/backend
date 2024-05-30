@@ -25,7 +25,7 @@ public class GenerateServiceImpl implements GenerateService {
     private final ChatAdapter chatAdapter;
 
     private static final String GENERATE_EXAMPLE_SENTENCE_USER_MESSAGE_TEMPLATE = """
-            "{wordList}" have meanings respectively "{meaningList}". "{completeWordList}" 단어들을 사용하여 "{inCompleteWord}" 를 포함한 영어 예문 한 문장을 만들어라. 중요한 점은 너가 생성한 예문이 문맥상 어색하면 안되며, "{inCompleteWord}" 단어는 "{inCompleteMeaning}" 로 해석되어야 한다. 문맥이 어색하다면 임의로 새로운 단어를 추가하거나 "{completeWordList}" 단어들 중 일부분을 삭제해도 좋으니 이를 명심하면서 신중히 {inCompleteWord} 를 포함한 예문을 생성해라. 생성한 예문이 문맥에 어울린다면 너에게 큰 보상을 줄 것이다. 응답은 부가설명없이 예문만 응답해라.
+            "{wordList}" have meanings respectively "{meaningList}". "{completeWordList}" 단어들을 사용하여 "{inCompleteWord}" 를 포함한 영어 예문 한 문장을 만들어라. 중요한 점은 너가 생성한 예문이 문맥상 어색하면 안되며, "{inCompleteWord}" 단어는 "{inCompleteMeaning}" 로 해석되어야 한다. 문맥이 어색하다면 임의로 새로운 단어를 추가하거나 "{completeWordList}" 단어들 중 일부분을 삭제해도 좋으니 이를 명심하면서 신중히 {inCompleteWord} 단어 그대로 를 포함한 영어 예문을 생성해라. 생성한 영어 예문이 문맥에 어울린다면 너에게 큰 보상을 줄 것이다. 응답은 부가설명없이 영어 예문만 응답해라.
             """;
 
     private static final String GENERATE_CONFUSE_WORDS_USER_MESSAGE_TEMPLATE = """

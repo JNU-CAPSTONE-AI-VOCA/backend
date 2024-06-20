@@ -22,12 +22,13 @@ configurations.configureEach {
 }
 
 ext {
-	set('springAiVersion', "0.8.1")
+	set('springAiVersion', "1.0.0-SNAPSHOT")
 }
 
 repositories {
 	mavenCentral()
 	maven { url 'https://repo.spring.io/milestone' }
+	maven { url 'https://repo.spring.io/snapshot' }
 }
 
 dependencyManagement {

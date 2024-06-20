@@ -1,7 +1,9 @@
 package kr.ac.jnu.vocai.backend.generate.controller;
 
+import kr.ac.jnu.vocai.backend.generate.dto.request.GenerateMeaningRequest;
 import kr.ac.jnu.vocai.backend.generate.dto.request.GenerateSentenceRequest;
 import kr.ac.jnu.vocai.backend.generate.dto.request.GenerateConfuseWordRequest;
+import kr.ac.jnu.vocai.backend.generate.dto.request.GenerateSentenceWordRequest;
 import kr.ac.jnu.vocai.backend.generate.service.GenerateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +18,7 @@ import reactor.core.publisher.Flux;
 
 /**
  * 생성 관련 컨트롤러 클래스.
+ *
  * @author daecheol song
  * @since 1.0
  */
@@ -37,12 +40,12 @@ public class GenerateController {
     }
 
     @PostMapping(value = "/sentence", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public String generateExampleSentence(@RequestBody @Validated GenerateSentenceRequest generateSentenceRequest, BindingResult bindingResult) {
+    public String generateExampleSentence(@RequestBody @Validated GenerateSentenceWordRequest generateSentenceWordRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.error("validation failed, cause = {}", bindingResult.getAllErrors());
             throw new RuntimeException(bindingResult.getAllErrors().toString());
         }
-        return generateService.generateExampleSentence(generateSentenceRequest);
+        return generateService.generateExampleSentence(generateSentenceWordRequest);
     }
 
     @PostMapping(value = "/words", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -52,5 +55,14 @@ public class GenerateController {
             throw new RuntimeException(bindingResult.getAllErrors().toString());
         }
         return generateService.generateConfuseWords(generateConfuseWordRequest);
+    }
+
+    @PostMapping(value = "/sentence/meaning", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public String generateSentenceMeaning(@RequestBody @Validated GenerateMeaningRequest generateMeaningRequest, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            log.error("validation failed, cause = {}", bindingResult.getAllErrors());
+            throw new RuntimeException(bindingResult.getAllErrors().toString());
+        }
+        return generateService.generateSentenceMeaning(generateMeaningRequest);
     }
 }

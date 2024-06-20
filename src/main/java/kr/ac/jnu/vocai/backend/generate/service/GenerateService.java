@@ -1,7 +1,9 @@
 package kr.ac.jnu.vocai.backend.generate.service;
 
+import kr.ac.jnu.vocai.backend.generate.dto.request.GenerateMeaningRequest;
 import kr.ac.jnu.vocai.backend.generate.dto.request.GenerateSentenceRequest;
 import kr.ac.jnu.vocai.backend.generate.dto.request.GenerateConfuseWordRequest;
+import kr.ac.jnu.vocai.backend.generate.dto.request.GenerateSentenceWordRequest;
 import reactor.core.publisher.Flux;
 
 /**
@@ -10,10 +12,11 @@ import reactor.core.publisher.Flux;
  */
 public interface GenerateService {
 
-    String generateExampleSentence(GenerateSentenceRequest generateSentenceRequest);
+    String generateExampleSentence(GenerateSentenceWordRequest generateSentenceWordRequest);
 
     Flux<String> generateExampleSentenceStream(GenerateSentenceRequest generateSentenceRequest);
 
     String generateConfuseWords(GenerateConfuseWordRequest generateConfuseWordRequest);
 
+    String generateSentenceMeaning(GenerateMeaningRequest generateMeaningRequest);
 }

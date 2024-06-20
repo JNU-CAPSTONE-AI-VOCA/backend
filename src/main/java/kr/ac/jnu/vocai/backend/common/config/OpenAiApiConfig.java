@@ -14,6 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.*;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -36,7 +39,7 @@ public class OpenAiApiConfig {
     @Bean
     @Primary
     public OpenAiApi openAiApi() {
-        return new OpenAiApi(ApiUtils.DEFAULT_BASE_URL, openAiChatProperties.getApiKey(), restClientBuilder());
+        return new OpenAiApi(ApiUtils.DEFAULT_BASE_URL, openAiChatProperties.getApiKey(), restClientBuilder(), webClientBuilder());
     }
 
     @Bean
@@ -49,6 +52,15 @@ public class OpenAiApiConfig {
             logResponse(response);
             return response;
         };
+    }
+
+    @Bean
+    public WebClient.Builder webClientBuilder() {
+        return WebClient.builder()
+                .filters(exchangeFilterFunctions -> {
+                    exchangeFilterFunctions.add(logRequest());
+                    exchangeFilterFunctions.add(logResponse());
+                });
     }
 
 
@@ -91,4 +103,25 @@ public class OpenAiApiConfig {
             log.debug("=======================response end=================================================");
         }
     }
+
+    private static ExchangeFilterFunction logRequest() {
+        return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
+            log.debug("===========================request begin================================================");
+            log.debug("Request: {} {}", clientRequest.method(), clientRequest.url());
+            clientRequest.headers().forEach((name, values) -> values.forEach(value -> log.debug("{}={}", name, value)));
+            log.debug("==========================request end================================================");
+            return Mono.just(clientRequest);
+        });
+    }
+
+    private static ExchangeFilterFunction logResponse() {
+        return ExchangeFilterFunction.ofResponseProcessor(clientResponse -> {
+            log.debug("============================response begin==========================================");
+            log.debug("Response status: {}", clientResponse.statusCode());
+            clientResponse.headers().asHttpHeaders().forEach((name, values) -> values.forEach(value -> log.debug("{}={}", name, value)));
+            log.debug("=======================response end=================================================");
+            return Mono.just(clientResponse);
+        });
+    }
+
 }
